@@ -1,0 +1,67 @@
+{ config, lib, pkgs, modulesPath, ... }:
+
+{
+  imports =
+    [ (modulesPath + "/installer/scan/not-detected.nix")
+    ];
+
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usb_storage" "sd_mod" "rtsx_pci_sdmmc" ];
+  boot.initrd.kernelModules = [ ];
+  boot.kernelModules = [ "kvm-intel" ];
+  boot.extraModulePackages = [ ];
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # BOOTLOADER PARTITION SETUP:
+  # SYSTEMD-BOOT SPECIFIC AS IT USES AN XBOOTLDR PARTITION
+  # To deal with dualbooting Windows and Windows having set the intial ESP
+  # partition to be 100MiB, without just reinstalling stuff or moving the windows
+  # paritition to the right to then increase the ESP partition size, we make use of an
+  # XBOOTLDR partition (which we can do because we use GPT partitioning). systemd-boot
+  # will scan both of these partitions for boot-entries so we can just not touch the ESP
+  # partition and let Windows hang around in there, while we install other entries to
+  # XBOOTLDR. For more info:
+  #
+  # https://uapi-group.org/specifications/specs/boot_loader_specification/#the-partitions
+  # The important parts to gather from the linked spec above are:
+  # - For a GPT partitioning, you MUST have a partition that is an EFI System Partition (ESP).
+  #   This parition should contain the bootloader and other stuff related to  the boot system,
+  #   it may also contain boot entries (kernel images, etc.)
+  #   Recommendation is to put this at the beginning of the disk, though it is not technically
+  #   required.  GUID: C12A7328-F81F-11D2-BA4B-00A0C93EC93B. gdisk type code: ef00
+  # - For a GPT paritioning (but not MBR), you may have an extra XBOOTLDR parition on the disk.
+  #   This partition can serve as an extra/alternate location for bootloader entries, it should
+  #   not be used for the bootloader itself though.
+  #   GUID: BC13C2FF-59E6-4262-A352-B275FD6F7172. gdisk type code: ea00
+  # - If you only have the ESP partition, it is recommended to mount it under /boot.
+  #   If you have both the ESP and XBOOTLDR partition, mount the ESP under /efi and
+  #   XBOOTLDR under /boot (yeah its stupid I know).
+  # - BOTH must be on the same disk. There should be NO MORE THAN ONE of EITHER on the same disk.
+  # - SAVE YOURSELF PAIN and dont deviate from recommendations in the spec: as always there is
+  #   software that treats these recommendation as requirements and makes assumptions that you
+  #   followed them, so something at some point will likely break if you dont follow them.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.efiSysMountPoint = "/efi";
+  boot.loader.systemd-boot.xbootldrMountPoint = "/boot";
+  fileSystems."/efi" =
+    { device = "/dev/disk/by-uuid/A06C-27C8";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
+  fileSystems."/boot" =
+    { device = "/dev/disk/by-uuid/EDCC-EC65";
+      fsType = "vfat";
+      options = [ "fmask=0022" "dmask=0022" ];
+    };
+
+  fileSystems."/" =
+    { device = "/dev/disk/by-uuid/f5dbc22f-e028-475a-b0e9-0898f4dbd6b5";
+      fsType = "ext4";
+    };
+
+  swapDevices = [ ];
+
+  networking.useDHCP = lib.mkDefault true;
+  
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+  hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
+}

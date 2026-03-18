@@ -1,0 +1,34 @@
+{ config, lib, fns, ... }:
+
+let
+  cfg = config.modules.hyprland;
+  outskirts = "${fns.rootRel /assets/wallpapers/outskirts.jpg}";
+in
+lib.mkIf cfg.enable {
+  services.hyprpaper = {
+    enable = true;
+    settings = {
+      wallpaper = {
+        monitor = ""; # Empty monitor means default to it
+        path = outskirts;
+        fit_mode = "cover";
+      };
+      splash = false;
+      splash_offset = 20;
+      splash_opacity = 0.8;
+    };
+  };
+
+  # The home-manager module for Hyprpaper will, when enabled, setup a systemd
+  # service that automatically runs Hyprpaper in any wayland session, and can thus
+  # interfere with other wallpaper utilities. Though the service is set up such that
+  # it starts and stops alongside desktop session, its default setup makes it so that once
+  # it has been started once, it will always restart when switching desktops even if the next
+  # desktop does not meet startup conditions. These overrides ensure that the service starts only
+  # in Hyprland, and will not restart when switching to a different desktop unless that desktop is
+  # Hyprland again.
+  systemd.user.services.hyprpaper = {
+    Unit.ConditionEnvironment = lib.mkForce "XDG_CURRENT_DESKTOP=Hyprland";
+    Service.Restart = lib.mkForce "on-failure"; 
+  };
+}

@@ -1,0 +1,19 @@
+{ pkgs, lib, config, ... }:
+
+let
+  cfg = config.modules.hyprland;
+in
+lib.mkIf cfg.enable {
+  home.packages = with pkgs; [ hyprtoolkit ];
+
+  # Catppuccin Mocha (Blue)
+  xdg.configFile."hypr/hyprtoolkit.conf".text = ''
+    background=0xff11111b
+    base=0xff1e1e2e
+    alternate_base=0xff181825
+    text=0xffcdd6f4
+    bright_text=0xffbac2de
+    accent=0xff89b4fa
+    accent_secondary=0xffb4befe
+  '';
+}

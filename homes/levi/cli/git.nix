@@ -11,6 +11,7 @@ in
 {
   programs.git = {
     enable = true;
+    signing.format = null; # Legacy behaviour was pgp
     settings = {
       init.defaultBranch = "main";
       user.name = "Levi van der Maas";

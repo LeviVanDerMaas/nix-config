@@ -33,6 +33,7 @@ in
     };
     gtk4 = {
       extraConfig.gtk-application-prefer-dark-theme = true;
+      theme = null; # gtk4 is not designed to be themed, yada yada yada
     };
   };
 

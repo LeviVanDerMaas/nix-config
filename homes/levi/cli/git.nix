@@ -18,13 +18,14 @@ in
       user.useConfigOnly = true;
       advice.detachedHead = false;
 
-      pretty.custom = "format:%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%w(0,10,10)%n%C(white)%s%C(reset) %C(dim white)- %an (%ae)%C(reset)%n%C(italic white)%b%C(reset)";
+      pretty.custom = "format:%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%w(0,10,10)%n%C(white)%s%C(reset) %C(dim white)- %an (%ae)%C(reset)%n%C(italic white)%+b%C(reset)";
       alias = {
         a = "add";
         c = "commit";
         s = "status";
 
         amend = "commit --amend";
+        recommit = "commit --amend --date=now";
         softmerge = "merge --no-ff --no-commit";
         unstage = "restore --staged";
 

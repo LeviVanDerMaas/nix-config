@@ -10,6 +10,4 @@
     #   diffToolMode = true;
     # };
   };
-
-  programs.bash.shellAliases.diff = "${config.programs.difftastic.package}/bin/difft";
 }

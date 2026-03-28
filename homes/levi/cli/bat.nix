@@ -18,6 +18,7 @@ in
 {
   programs.bat = {
     enable = true;
+    package = pkgs.bat.override (prev: { less = pkgs.lessTERMOverride; });
     themes.catppuccin.src = catppuccin-bat;
     config = {
       theme = "catppuccin";

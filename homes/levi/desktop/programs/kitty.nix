@@ -8,6 +8,7 @@
     package = fns.wrapPkgExe {
       package = pkgs.kitty;
       wrapperArgs = [
+        "--prefix" "PATH" ":" "${lib.makeBinPath [ pkgs.lessTERMOverride ]}"
         "--add-flag" "-1"
       ];
     };

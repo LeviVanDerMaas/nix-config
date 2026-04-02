@@ -487,6 +487,7 @@ in
           firstDayOfWeek = 1;
           hideWeatherCityName = false;
           hideWeatherTimezone = false;
+          autoLocate = false;
           name = "Netherlands";
           showCalendarEvents = true;
           showCalendarWeather = true;

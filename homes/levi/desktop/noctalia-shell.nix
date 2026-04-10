@@ -172,7 +172,7 @@ in
                 panelShowVisualizer = true;
                 scrollingMode = "hover";
                 showAlbumArt = true;
-                showArtistFirst = true;
+                showArtistFirst = false;
                 showProgressRing = true;
                 showVisualizer = true;
                 textColor = "none";

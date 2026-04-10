@@ -8,7 +8,7 @@
     };
 
     noctalia-shell = {
-      url = "github:noctalia-dev/noctalia-shell/v4.7.3";
+      url = "github:noctalia-dev/noctalia-shell/v4.7.5";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -16,6 +16,15 @@
       url = "github:LeviVanDerMaas/neovim-config";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+  };
+
+  nixConfig = {
+    extra-substituters = [
+      "https://noctalia.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "noctalia.cachix.org-1:pCOR47nnMEo5thcxNDtzWpOxNFQsBRglJzxWPp3dkU4="
+    ];
   };
 
   outputs = { self, nixpkgs, ... }@flake-inputs:

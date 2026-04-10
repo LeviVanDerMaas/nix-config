@@ -1,8 +1,9 @@
-{ flake-outputs, fns, specialArgs, ... }:
+{ flake-outputs, specialArgs, ... }:
 
 {
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
+    trusted-users = [ "root" "@wheel" ];
 
     # Read note below to understand what keep-{derivations,outputs} actually do
     keep-derivations = true;

@@ -43,6 +43,7 @@ in
 
       input = {
         kb_layout = "us";
+        kb_variant = "altgr-weur"; # https://altgr-weur.eu/
         kb_options = "caps:escape, compose:sclk";
         repeat_rate = 60;
         repeat_delay = 600;
